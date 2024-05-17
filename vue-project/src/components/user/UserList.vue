@@ -60,7 +60,7 @@ import axios from 'axios';
 import { useToast } from "vue-toastification";
 import { useStore } from 'vuex';
 import EditUser from './EditForm.vue';
-import '.../assets/main.css';
+import '../assets/main.css';
 
 export default {
   name: 'UserList',

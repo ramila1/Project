@@ -66,7 +66,7 @@ export default {
     const isValidPhone = ref(true);
     const isValidGender = ref(true);
     const isValidAge = ref(true);
-    const isValidAddress = ref(true); 
+    const isValidAddress = ref(true); // New validation for address
     const genderWarning = ref('');
 
     const genders = ['Male', 'Female', 'Other'];
@@ -104,7 +104,7 @@ export default {
         return;
       }
 
-      if (!currentUser.address) { 
+      if (!currentUser.address) { // Check if address is empty
         isValidAddress.value = false;
         return;
       } else {
@@ -147,7 +147,7 @@ export default {
       genders,
       isValidGender,
       isValidPhone,
-      isValidAddress, 
+      isValidAddress, // Added isValidAddress
       genderWarning
     };
   }
@@ -155,4 +155,5 @@ export default {
 </script>
 
 <style scoped>
+/* No custom styles needed, Tailwind CSS classes handle the styling */
 </style>
