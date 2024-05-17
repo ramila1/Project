@@ -1,13 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
-import HomeView from '../views/HomeView.vue';
-import UserList from '../views/UserList.vue'; 
-import CreateUser from '../views/Practice.vue'; 
-import EditUser from '../views/EditForm.vue';
-import LoginForm from '../views/Login.vue';
-import Landing from '../views/blogpost/Landing.vue';
-import MyBlog from '../views/blogpost/MyBlog.vue';
-
+import HomeView from '../components/user/HomeView.vue';
+import UserList from '../components/user/UserList.vue';
+import CreateUser from '../components/user/CreateForm.vue';
+import EditUser from '../components/user/EditForm.vue';
+import LoginForm from '../components/user/Login.vue';
+import Landing from '../components/blogpost/Landing.vue';
 
 
 const router = createRouter({
@@ -40,8 +38,7 @@ const router = createRouter({
       path:'/blog_landing',
       name:'Landing',
       component:Landing
-    },
-    { path: '/my-blogs', component: MyBlog }
+    }
 
 
   ]

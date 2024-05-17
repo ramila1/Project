@@ -56,7 +56,7 @@ import axios from 'axios';
 import { useRouter } from 'vue-router'; 
 
 import { useToast } from "vue-toastification";
-import '../assets/main.css';
+import './../../assets/main.css';
 
 export default {
   name: "Signup",

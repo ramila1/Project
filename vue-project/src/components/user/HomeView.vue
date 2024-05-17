@@ -13,10 +13,10 @@ import { useRouter } from 'vue-router';
 import axios from 'axios';
 import { useToast } from "vue-toastification";
 import { useStore } from 'vuex';
-import LoginForm from '../views/Login.vue';
-import '../assets/main.css';
-import UserList from '../views/UserList.vue';
-import CreateUser from '../views/Practice.vue';
+import LoginForm from '../user/Login.vue'; 
+import './../../assets/main.css';
+import UserList from '../user/UserList.vue';
+import CreateUser from '../user/CreateForm.vue';
 
 
 export default {

@@ -60,7 +60,7 @@ import axios from 'axios';
 import { useToast } from "vue-toastification";
 import { useStore } from 'vuex';
 import EditUser from './EditForm.vue';
-import '../assets/main.css';
+import './../../assets/main.css';
 
 export default {
   name: 'UserList',
@@ -109,7 +109,7 @@ export default {
             store.dispatch('addUserToDeleted', userToDelete.id);
             showDeleteConfirmation.value = false;
             toast.success('User is successfully deleted');
-            getUsers(); // Refresh the list after deletion
+            getUsers(); 
           })
           .catch(error => {
             console.log(error);
