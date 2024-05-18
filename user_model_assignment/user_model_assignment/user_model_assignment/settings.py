@@ -40,7 +40,6 @@ INSTALLED_APPS = [
     'model_app',
     'corsheaders',
     'rest_framework',
-    'rest_framework_simplejwt',
     'BlogPost'
 ]
 
@@ -128,11 +127,7 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ),
-}
+
 # REST_FRAMEWORK = {
 #     'DEFAULT_PARSER_CLASSES': [
 #         'rest_framework.parsers.JSONParser',
