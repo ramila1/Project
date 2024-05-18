@@ -21,6 +21,6 @@ from rest_framework.routers import DefaultRouter
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/users/', include('model_app.urls')),
-    path('api/',include('BlogPost.urls'))
+    path('api/users/',include('BlogPost.urls'))
 ]
 
