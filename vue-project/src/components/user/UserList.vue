@@ -49,15 +49,41 @@
       </div>
     </div>
 
+    <h2 class="section-title">Deleted Users</h2>
+<table class="table">
+  <thead>
+    <tr>
+      <th>Email</th>
+      <th>Phone</th>
+      <th>Address</th>
+      <th>Gender</th>
+      <th>Age</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr v-for="deletedUser in deletedUsers" :key="deletedUser.id">
+      <td>{{ deletedUser.email }}</td>
+      <td>{{ deletedUser.phone }}</td>
+      <td>{{ deletedUser.address }}</td>
+      <td>{{ deletedUser.gender }}</td>
+      <td>{{ deletedUser.age }}</td>
+      <td>
+        <button @click="restoreUser(deletedUser.id)" class="edit-user">Restore</button>
+        <button @click="deleteUserPermanently(deletedUser.id)" class="delete-user">Delete</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
     <router-view></router-view>
   </div>
 </template>
-
 <script>
 import { ref, computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import axios from 'axios';
-import { useToast } from "vue-toastification";
+import { useToast } from 'vue-toastification';
 import { useStore } from 'vuex';
 import EditUser from './EditForm.vue';
 import './../../assets/main.css';
@@ -65,15 +91,18 @@ import './../../assets/main.css';
 export default {
   name: 'UserList',
   components: {
-    EditUser
+    EditUser,
   },
   setup() {
     const toast = useToast();
     const router = useRouter();
     const store = useStore();
     const users = ref([]);
+    const deletedUsers = ref([]);
     const showEditModal = ref(false);
+    const showDeleteConfirmation = ref(false);
     const currentUserId = ref(null);
+    let currentUserToDelete = null;
 
     const goToAddUser = () => {
       router.push('/create-user');
@@ -88,30 +117,29 @@ export default {
       showEditModal.value = false;
     };
 
-    const showDeleteConfirmation = ref(false);
-    let currentUserToDelete = null;
-
     const getUsers = () => {
-      axios.get("http://127.0.0.1:8000/api/users/")
-        .then(response => {
-          users.value = response.data;
+      axios
+        .get('http://127.0.0.1:8000/api/users/')
+        .then((response) => {
+          users.value = response.data.filter((user) => !user.is_deleted);
+          deletedUsers.value = response.data.filter((user) => user.is_deleted);
         })
-        .catch(error => {
+        .catch((error) => {
           console.log(error);
         });
     };
 
     const deleteUserConfirmed = () => {
-      const userToDelete = users.value.find(user => user.id === currentUserToDelete);
+      const userToDelete = users.value.find((user) => user.id === currentUserToDelete);
       if (userToDelete) {
-        axios.delete(`http://127.0.0.1:8000/api/users/${userToDelete.id}/`)
+        axios
+          .delete(`http://127.0.0.1:8000/api/users/${userToDelete.id}/`)
           .then(() => {
-            store.dispatch('addUserToDeleted', userToDelete.id);
-            showDeleteConfirmation.value = false;
             toast.success('User is successfully deleted');
-            getUsers(); 
+            getUsers();
+            showDeleteConfirmation.value = false;
           })
-          .catch(error => {
+          .catch((error) => {
             console.log(error);
           });
       }
@@ -127,16 +155,42 @@ export default {
     };
 
     const updateUserList = (updatedUser) => {
-      const index = users.value.findIndex(user => user.id === updatedUser.id);
+      const index = users.value.findIndex((user) => user.id === updatedUser.id);
       if (index !== -1) {
         users.value.splice(index, 1, updatedUser);
       }
       showEditModal.value = false;
     };
 
+    const restoreUser = (id) => {
+      axios
+        .patch(`http://127.0.0.1:8000/api/users/${id}/restore/`)
+        .then(() => {
+          toast.success('User restored successfully');
+          getUsers();
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    };
+
+    const deleteUserPermanently = (id) => {
+      const userToDelete = deletedUsers.value.find((user) => user.id === id);
+      if (userToDelete) {
+        axios
+          .delete(`http://127.0.0.1:8000/api/users/${userToDelete.id}/`)
+          .then(() => {
+            toast.success('User permanently deleted');
+            getUsers();
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
+    };
+
     const filteredUsers = computed(() => {
-      const deletedUsers = store.state.deletedUsers;
-      return users.value.filter(user => !deletedUsers.includes(user.id));
+      return users.value;
     });
 
     onMounted(() => {
@@ -145,6 +199,7 @@ export default {
 
     return {
       users,
+      deletedUsers,
       showDeleteConfirmation,
       showEditModal,
       currentUserId,
@@ -156,10 +211,12 @@ export default {
       cancelDelete,
       closeEditModal,
       updateUserList,
+      restoreUser,
+      deleteUserPermanently,
       filteredUsers,
       toast,
     };
-  }
+  },
 };
 </script>
 
